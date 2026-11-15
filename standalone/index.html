@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>紫微斗数 · 倪海厦体系排盘</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--gold:#c9a227;--gold-l:#e8c96a;--panel:#0f1522;--border:rgba(201,162,39,.22);--text:#e6e2d8;--dim:#8b8f9a}
+body{margin:0;background:radial-gradient(circle at 50% 0%,#131b2b 0%,#080c14 60%);color:var(--text);
+font-family:-apple-system,"PingFang SC","Noto Sans SC",system-ui,sans-serif;min-height:100vh}
+.wrap{max-width:760px;margin:0 auto;padding:16px 12px 60px}
+h1{font-size:18px;font-weight:600;letter-spacing:.14em;text-align:center;margin:12px 0 4px;color:var(--gold-l)}
+.sub{text-align:center;font-size:11px;color:var(--dim);letter-spacing:.16em;margin-bottom:20px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:15px}
+label{display:block;font-size:11px;color:var(--dim);margin:0 0 6px;letter-spacing:.04em}
+input,select{width:100%;padding:10px 10px;border-radius:9px;border:1px solid rgba(255,255,255,.12);
+background:#0b101c;color:var(--text);font-size:14px;outline:none;appearance:none}
+input:focus,select:focus{border-color:var(--gold)}
+select:disabled{opacity:.45}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.mb{margin-bottom:13px}
+.btn{width:100%;padding:14px;border-radius:11px;border:none;font-size:15px;font-weight:600;letter-spacing:.06em;
+background:linear-gradient(135deg,#c9a227,#8d6d14);color:#1a1408;cursor:pointer}
+.btn2{background:transparent;border:1px solid var(--border);color:var(--text);font-size:12.5px;padding:7px 14px;border-radius:9px;cursor:pointer}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;padding:10px;border-radius:9px;border:1px solid rgba(255,255,255,.12);background:#0b101c;color:var(--dim);font-size:13px;cursor:pointer}
+.seg button.on{border-color:var(--gold);color:var(--gold-l);background:rgba(201,162,39,.1)}
+.hint{font-size:11px;color:var(--dim);line-height:1.7;margin-top:9px}
+.board{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:minmax(84px,auto);
+gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.cell{background:#0b101c;padding:5px 4px;cursor:pointer;overflow:hidden;transition:background .12s}
+.cell:active{background:#16203a}
+.ctop{display:flex;justify-content:space-between;font-size:9px;color:#6b7280;line-height:1.3}
+.pname{font-size:11px;color:var(--gold-l);margin:2px 0 1px;letter-spacing:.04em}
+.major{font-size:13px;font-weight:600;line-height:1.4;color:#fff}
+.minor{font-size:9px;color:#7f8694;line-height:1.4;margin-top:2px;word-break:break-all}
+.sha{color:#d4726a}
+.center{grid-row:2/4;grid-column:2/4;background:#0a0f1a;display:flex;flex-direction:column;
+align-items:center;justify-content:center;gap:4px;padding:6px;text-align:center}
+.center .tao{font-size:26px;color:var(--gold);opacity:.2;line-height:1}
+.center .kv{font-size:10px;color:var(--dim);line-height:1.5}
+.center .kv b{color:var(--text);font-weight:500}
+.tag{display:inline-block;font-size:8px;padding:0 3px;border-radius:3px;margin-left:1px;vertical-align:super}
+.lu{background:rgba(80,200,120,.18);color:#6fdc9a}
+.quan{background:rgba(120,120,240,.2);color:#9d9dff}
+.ke{background:rgba(80,160,220,.2);color:#7dc4f0}
+.ji{background:rgba(220,90,90,.2);color:#f08a8a}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:12px 0 9px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:0 0 auto;padding:7px 12px;border-radius:16px;border:1px solid var(--border);
+background:transparent;color:var(--dim);font-size:12px;cursor:pointer}
+.tabs button.on{background:rgba(201,162,39,.14);color:var(--gold-l);border-color:var(--gold)}
+.md{font-size:13px;line-height:1.78;color:#cdc9bf}
+.md h{display:block;margin:14px 0 3px;font-size:12px;font-weight:600;color:var(--gold-l);letter-spacing:.05em}
+.md p{margin:3px 0}
+.md strong{color:#fff;font-weight:600}
+.md li{margin:3px 0 3px 16px;list-style:disc}
+.info{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;font-size:11px;color:var(--dim);margin:10px 0}
+.info span{padding:3px 9px;border:1px solid var(--border);border-radius:12px}
+.hidden{display:none}
+.pillars{text-align:center;font-size:11px;color:var(--dim);margin:0 0 8px;letter-spacing:.08em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>紫 微 斗 数</h1>
+  <div class="sub">倪海厦《天纪》体系 · 开源排盘引擎</div>
+
+  <div id="formView" class="card">
+    <div class="mb"><label>姓名（可选）</label><input id="fName" type="text" placeholder="请输入姓名"></div>
+    <div class="mb"><label>出生日期（公历）</label>
+      <div class="grid3"><select id="fYear"></select><select id="fMonth"></select><select id="fDay"></select></div>
+    </div>
+    <div class="mb"><label>出生地点（用于真太阳时校正）</label>
+      <div class="grid2"><select id="fProv"></select><select id="fCity" disabled></select></div>
+    </div>
+    <div class="mb"><label>出生时间（北京时间）</label>
+      <div class="grid2"><select id="fHour"></select><select id="fMin"></select></div>
+    </div>
+    <div class="mb"><label>性别</label>
+      <div class="seg"><button type="button" id="gMale" class="on">男</button><button type="button" id="gFemale">女</button></div>
+    </div>
+    <button class="btn" id="submitBtn">立即起盘</button>
+    <div class="hint">按倪师批命口径：填出生地后，会把北京时间按经度换算成当地真太阳时再定时辰。晚子时（23:00–23:59）会按次日排盘。</div>
+  </div>
+
+  <div id="chartView" class="hidden">
+    <button class="btn2" id="backBtn" style="margin-bottom:10px">← 重新起盘</button>
+    <div class="pillars" id="pillars"></div>
+    <div class="board" id="board"></div>
+    <div class="info" id="infoBar"></div>
+    <div class="tabs" id="tabs">
+      <button data-k="overview" class="on">命格</button>
+      <button data-k="love">感情</button>
+      <button data-k="career">事业</button>
+      <button data-k="wealth">财运</button>
+      <button data-k="health">健康</button>
+      <button data-k="personality">性格</button>
+    </div>
+    <div class="card"><div class="md" id="mdBox"></div></div>
+    <div class="hint" style="text-align:center;margin-top:14px">
+      排盘引擎 ziwei-doushu（MIT 开源）· 解读由盘面结构本地生成，属参考性分析
+    </div>
+  </div>
+</div>
+
+<script src="bundle.js"></script>
+<script>
+(function(){
+  "use strict";
+  var Z = window.ZIWEI;
+  var GAN = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+  var B = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+  var POS = {5:[1,1],6:[1,2],7:[1,3],8:[1,4],4:[2,1],9:[2,4],3:[3,1],10:[3,4],2:[4,1],1:[4,2],0:[4,3],11:[4,4]};
+  var ORDER = [5,6,7,8,4,9,3,10,2,1,0,11];
+  var gender = 'male';
+  var chart = null;
+
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function fill(sel, items, placeholder){
+    var h = placeholder ? '<option value="">'+placeholder+'</option>' : '';
+    for(var i=0;i<items.length;i++){
+      var v = items[i].v, t = items[i].t;
+      h += '<option value="'+v+'">'+t+'</option>';
+    }
+    sel.innerHTML = h;
+  }
+
+  // 年、月、日、时、分
+  var ys=[]; for(var y=2026;y>=1920;y--) ys.push({v:String(y),t:y+' 年'});
+  fill($('fYear'), ys, '年份');
+  var ms=[]; for(var m=1;m<=12;m++) ms.push({v:String(m),t:m+' 月'});
+  fill($('fMonth'), ms, '月份');
+  var ds=[]; for(var d=1;d<=31;d++) ds.push({v:String(d),t:d+' 日'});
+  fill($('fDay'), ds, '日期');
+  var hs=[]; for(var h=0;h<=23;h++) hs.push({v:String(h),t:(h<10?'0'+h:h)+' 时'});
+  fill($('fHour'), hs, '时');
+  var mis=[]; for(var mi=0;mi<=59;mi++) mis.push({v:String(mi),t:(mi<10?'0'+mi:mi)+' 分'});
+  fill($('fMin'), mis, '分');
+
+  var provItems = Z.PROVINCES.map(function(p){ return {v:p.name, t:p.name}; });
+  fill($('fProv'), provItems, '省份 / 直辖市');
+
+  $('fProv').addEventListener('change', function(){
+    var pn = this.value;
+    var prov = null;
+    for(var i=0;i<Z.PROVINCES.length;i++){ if(Z.PROVINCES[i].name === pn){ prov = Z.PROVINCES[i]; break; } }
+    if(!prov){ fill($('fCity'), [], '先选省份'); $('fCity').disabled = true; return; }
+    var cities = prov.cities.map(function(c){ return {v:c.name, t:c.name}; });
+    fill($('fCity'), cities, '城市');
+    $('fCity').disabled = false;
+  });
+
+  $('gMale').addEventListener('click', function(){
+    gender='male'; this.classList.add('on'); $('gFemale').classList.remove('on');
+  });
+  $('gFemale').addEventListener('click', function(){
+    gender='female'; this.classList.add('on'); $('gMale').classList.remove('on');
+  });
+
+  function lookupLongitude(){
+    var pn = $('fProv').value, cn = $('fCity').value;
+    for(var i=0;i<Z.PROVINCES.length;i++){
+      if(Z.PROVINCES[i].name === pn){
+        var cs = Z.PROVINCES[i].cities;
+        for(var j=0;j<cs.length;j++){ if(cs[j].name === cn) return cs[j].longitude; }
+      }
+    }
+    return 120;
+  }
+
+  function starHTML(s){
+    var cls = (s.type === 'sha') ? 'sha' : '';
+    var bright = s.brightnessRaw ? '<sub style="font-size:8px;color:#8b8f9a;vertical-align:baseline">'+s.brightnessRaw+'</sub>' : '';
+    var tag = '';
+    if(s.siHua){
+      var k = s.siHua==='禄'?'lu':s.siHua==='权'?'quan':s.siHua==='科'?'ke':'ji';
+      tag = '<span class="tag '+k+'">'+s.siHua+'</span>';
+    }
+    return '<span class="'+cls+'">'+esc(s.name)+bright+'</span>'+tag;
+  }
+
+  function briefing(c){
+    var parts = [];
+    parts.push((c.birthInfo.name ? esc(c.birthInfo.name)+' · ' : '') + B[c.mingGongBranch] + '宫安命');
+    if(c.lunarInfo.fourPillars) parts.push('四柱 ' + c.lunarInfo.fourPillars.join(' '));
+    $('pillars').textContent = parts.join('　');
+  }
+
+  function renderInfo(c){
+    var dax = c.daXians[c.currentDaXianIndex];
+    var items = [
+      '命主 ' + (c.mingZhu || '—'),
+      '身主 ' + (c.shenZhu || '—'),
+      c.yinYangGender || '',
+      dax ? '当前 ' + dax.startAge + '–' + dax.endAge + '岁 · ' + dax.palaceName : ''
+    ];
+    $('infoBar').innerHTML = items.filter(function(x){return !!x;})
+      .map(function(x){ return '<span>'+esc(x)+'</span>'; }).join('');
+    briefing(c);
+  }
+
+  function onClickPalace(name){
+    if(!chart) return;
+    renderMD(Z.buildPalace(chart, name));
+    var btns = $('tabs').querySelectorAll('button');
+    for(var i=0;i<btns.length;i++) btns[i].classList.remove('on');
+    $('tabs').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  function renderBoard(c){
+    var board = $('board');
+    board.innerHTML = '';
+    var map = {};
+    for(var i=0;i<c.palaces.length;i++) map[c.palaces[i].branch] = c.palaces[i];
+
+    for(var idx=0; idx<ORDER.length; idx++){
+      var br = ORDER[idx];
+      var p = map[br];
+      if(!p) continue;
+      var pos = POS[br];
+
+      var cell = document.createElement('div');
+      cell.className = 'cell';
+      cell.style.gridRow = pos[0];
+      cell.style.gridColumn = pos[1];
+
+      var majors = [], others = [];
+      for(var s=0;s<p.stars.length;s++){
+        if(p.stars[s].type === 'major') majors.push(p.stars[s]); else others.push(p.stars[s]);
+      }
+      var headTag = p.isMingGong ? '命' : (p.isShenGong ? '身' : '');
+      var majorHTML = majors.length ? majors.map(starHTML).join('<br>') : '<span style="color:#5f6672;font-size:11px">空宫'+(p.borrowedFromName?' · 借'+p.borrowedFromName:'')+'</span>';
+      var borrowedHTML = (!majors.length && p.borrowedStars && p.borrowedStars.length)
+        ? '<div style="font-size:9px;color:#8a7a3a;line-height:1.35">借 ' + p.borrowedStars.map(esc).join(' ') + '</div>' : '';
+      var minorHTML = others.length ? others.map(starHTML).join(' ') : '';
+
+      cell.innerHTML =
+        '<div class="ctop"><span>' + GAN[p.stem] + B[br] + '</span><span>' + headTag + '</span></div>' +
+        '<div class="pname">' + esc(p.name) + '</div>' +
+        '<div class="major">' + majorHTML + '</div>' + borrowedHTML +
+        '<div class="minor">' + minorHTML + '</div>';
+
+      (function(palaceName){
+        cell.addEventListener('click', function(){ onClickPalace(palaceName); });
+      })(p.name);
+
+      board.appendChild(cell);
+
+      if(idx === 3){
+        var center = document.createElement('div');
+        center.className = 'center';
+        center.innerHTML =
+          '<div class="tao">☯</div>' +
+          '<div class="kv">命宫 <b>' + B[c.mingGongBranch] + '</b></div>' +
+          '<div class="kv">身宫 <b>' + B[c.shenGongBranch] + '</b></div>' +
+          '<div class="kv"><b>' + esc(c.wuxingJuName) + '</b></div>' +
+          '<div class="kv">紫微在<b>' + B[c.ziweiPos] + '</b></div>' +
+          '<div class="kv" style="margin-top:3px">农历 ' + c.lunarInfo.lunarMonth + '.' + c.lunarInfo.lunarDay + '</div>';
+        board.appendChild(center);
+      }
+    }
+  }
+
+  function renderMD(text){
+    var lines = String(text || '').split('\n');
+    var out = '';
+    for(var i=0;i<lines.length;i++){
+      var t = lines[i].trim();
+      if(!t){ out += '<div style="height:4px"></div>'; continue; }
+      var heading = t.match(/^\*\*【(.+?)】\*\*$/);
+      if(heading){ out += '<h>'+esc(heading[1])+'</h>'; continue; }
+      var e = esc(t).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*\*/g, '');
+      if(/^-\s?/.test(t)){ out += '<li>' + e.replace(/^-\s?/, '') + '</li>'; continue; }
+      out += '<p>' + e + '</p>';
+    }
+    $('mdBox').innerHTML = out;
+  }
+
+  function showTopic(k){
+    var map = {
+      overview: Z.buildOverview, love: Z.buildLove, career: Z.buildCareer,
+      wealth: Z.buildWealth, health: Z.buildHealth, personality: Z.buildPersonality
+    };
+    if(!map[k]) return;
+    renderMD(map[k](chart));
+    var btns = $('tabs').querySelectorAll('button');
+    for(var i=0;i<btns.length;i++) btns[i].classList.toggle('on', btns[i].getAttribute('data-k') === k);
+  }
+
+  $('tabs').addEventListener('click', function(e){
+    var k = e.target.getAttribute && e.target.getAttribute('data-k');
+    if(k) showTopic(k);
+  });
+
+  $('submitBtn').addEventListener('click', function(){
+    var yr = $('fYear').value, mo = $('fMonth').value, da = $('fDay').value;
+    if(!yr || !mo || !da){ alert('请选择完整的出生日期'); return; }
+    if(!$('fHour').value || !$('fMin').value){ alert('请选择出生时间'); return; }
+
+    var form = {
+      name: $('fName').value.trim(),
+      year: yr, month: mo, day: da,
+      clockHour: $('fHour').value, clockMinute: $('fMin').value,
+      unknownTime: false,
+      province: $('fProv').value, city: $('fCity').value, longitude: lookupLongitude(),
+      gender: gender
+    };
+
+    try{
+      var info = Z.formToBirthInfo(form);
+      chart = Z.generateChart(info);
+      $('formView').classList.add('hidden');
+      $('chartView').classList.remove('hidden');
+      renderInfo(chart);
+      renderBoard(chart);
+      showTopic('overview');
+      window.scrollTo({top:0, behavior:'instant'});
+    }catch(err){
+      alert('排盘失败：' + (err && err.message ? err.message : err));
+      if(window.console) console.error(err);
+    }
+  });
+
+  $('backBtn').addEventListener('click', function(){
+    $('chartView').classList.add('hidden');
+    $('formView').classList.remove('hidden');
+    window.scrollTo({top:0, behavior:'instant'});
+  });
+})();
+</script>
+</body>
+</html>
